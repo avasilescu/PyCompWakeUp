@@ -36,5 +36,23 @@ Computers = Comp 1
 Software can then check for each computer listed.
 '''
  
+def EmailChecker(server,port,user,pw,subject):
+	#Log into email server using IMAP over SSL
+    mail = imaplib.IMAP4_SSL(server,port);
+	mail.login(user, pw);
 
+    #For Gmail, mail.select can select "inbox" or a label such as "WOL Comp". Can rely on Gmail filters instead of developing custom from scratch.
+	mail.select(subject); 
+	
+	typ, data = mail.search(None, '(UNSEEN)'); #search for unread emails
+	NewEmailFlag=False;	#initializes flag to false
+	
+    for num in data[0].split():
+		typ, data = mail.fetch(num, '(RFC822)') #RFC822 is a parser for email headers; downloading any new email that matches "subject" specified above. 
+		if num > 0: NewEmailFlag=True; #if new email, set flag
+
+	mail.close(); #close currently selected mailbox
+	mail.logout(); #shutdown connection to server
+	print('New Email - ' + str(NewEmailFlag)); #useful for debugging and testing
+	return NewEmailFlag;
 
