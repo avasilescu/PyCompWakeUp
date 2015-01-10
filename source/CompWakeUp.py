@@ -64,4 +64,15 @@ def WOL(ADDR,MAC):
     #for the following command to work, "wakeonlan" needs to be installed. for RPi (assuming raspian distro), run command "sudo apt-get install "wakeonlan"
 	subprocess.call(['wakeonlan','-i', ADDR,MAC]);
     
+gmail_server,imap_port,username,password,Subjects,Comps,MAC,Broadcast=ImportConf('CompWakeUp.conf');
+
+#goes through each "subject" and checks email to see if any new emails. sends WOL packet if so.
+for idx,val in enumerate(Subjects):
+    print('Array Index - ' + str(idx));
+    print('Subject - ' + val);
+    CompFlag=EmailChecker(gmail_server,imap_port,username,password,Subjects[idx]);
+    if CompFlag:
+        print('Waking up - ' + Comps[idx]);
+        WOL(Broadcast[idx],MAC[idx]);
+
     
