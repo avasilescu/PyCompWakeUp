@@ -2,6 +2,7 @@
 #Alex Vasilescu
 #Python Script to wake up desktop using the RaspberryPi
 
+import imaplib;
 import ConfigParser;
 
 def ImportConf(filename):
