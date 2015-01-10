@@ -4,6 +4,8 @@
 
 import imaplib;
 import ConfigParser;
+import subprocess;
+import os;
 
 def ImportConf(filename):
 	config=ConfigParser.ConfigParser();	
@@ -57,3 +59,9 @@ def EmailChecker(server,port,user,pw,subject):
 	print('New Email - ' + str(NewEmailFlag)); #useful for debugging and testing
 	return NewEmailFlag;
 
+def WOL(ADDR,MAC):
+	print MAC;	#debugging only
+    #for the following command to work, "wakeonlan" needs to be installed. for RPi (assuming raspian distro), run command "sudo apt-get install "wakeonlan"
+	subprocess.call(['wakeonlan','-i', ADDR,MAC]);
+    
+    
