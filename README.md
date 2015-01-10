@@ -12,3 +12,10 @@ I wanted to wake up my desktop but it is not connect to my router via an etherne
 ##Concept of Operation
 
 RaspberryPi checks an email address looking for a specific email, over WiFi. When it receives this email, it will send a WOL signal to the desktop over ethernet, resulting in turning on the desktop. 
+
+##File Structure
+
+- source
+  - CompWakeUp.conf
+  - CompWakeUp.py
+- README.md
