@@ -63,6 +63,11 @@ def WOL(ADDR,MAC):
 	print MAC;	#debugging only
     #for the following command to work, "wakeonlan" needs to be installed. for RPi (assuming raspian distro), run command "sudo apt-get install "wakeonlan"
 	subprocess.call(['wakeonlan','-i', ADDR,MAC]);
+
+def rmtshutdown(ADDR,MAC,username,pw):
+    print ADDR;
+    print MAC;
+    subprocess.call(['net rpo shutdown','-I',ADDR,'-U',username,pw]);
     
 gmail_server,imap_port,username,password,Subjects,Comps,MAC,Broadcast=ImportConf('CompWakeUp.conf');
 
