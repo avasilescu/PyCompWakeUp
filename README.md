@@ -19,3 +19,9 @@ RaspberryPi checks an email address looking for a specific email, over WiFi. Whe
   - CompWakeUp.conf
   - CompWakeUp.py
 - README.md
+
+##Software to Install
+
+The following software needs to be installed for PyCompWakeUp to work. The commands that follow are to install the software in a Debian based environment (Ubuntu, Raspian, etc).
+- wakeonlan - sudo apt-get install wakeonlan
+- samba-common-bin - sudo apt-get install samba-common-bin
