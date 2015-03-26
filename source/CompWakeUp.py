@@ -21,7 +21,9 @@ def ImportConf(filename):
 	Comps=config.get('General','Computers').split('\n');
 	MAC=config.get('General','MAC').split('\n');
 	Broadcast=config.get('General','Broadcast').split('\n');	
-
+    comp_user=config.get('General','comp_user').split('\n');
+    comp_pw=config.get('General','comp_pw').split('\n');
+    
 	print(Comps); #for debugging to see it read in correctly
 
 	return(gmail_server,imap_port,username,password,Subject,Comps,MAC,Broadcast);
@@ -67,7 +69,7 @@ def WOL(ADDR,MAC):
 def rmtshutdown(ADDR,MAC,username,pw):
     print ADDR;
     print MAC;
-    subprocess.call(['net rpo shutdown','-I',ADDR,'-U',username,pw]);
+    subprocess.call(['net rpc shutdown','-I',ADDR,'-U',username,pw]);
     
 gmail_server,imap_port,username,password,Subjects,Comps,MAC,Broadcast=ImportConf('CompWakeUp.conf');
 
