@@ -21,8 +21,8 @@ def ImportConf(filename):
 	Comps=config.get('General','Computers').split('\n');
 	MAC=config.get('General','MAC').split('\n');
 	Broadcast=config.get('General','Broadcast').split('\n');	
-    comp_user=config.get('General','comp_user').split('\n');
-    comp_pw=config.get('General','comp_pw').split('\n');
+	comp_user=config.get('General','comp_user').split('\n');
+	comp_pw=config.get('General','comp_pw').split('\n');
     
 	print(Comps); #for debugging to see it read in correctly
 
@@ -33,26 +33,26 @@ Theory of operation
 In the config file, the order of the Subjects, Broadcast, Computers and MAC addresses are respective of the computer.
 Thus it will be:
 
-Subject =   Comp 1
-            Comp 2
-Computers = Comp 1
-            Comp 2
-            
+Subject =	Comp 1
+			Comp 2
+Computers =	Comp 1
+			Comp 2
+
 Software can then check for each computer listed.
 '''
  
 def EmailChecker(server,port,user,pw,subject):
 	#Log into email server using IMAP over SSL
-    mail = imaplib.IMAP4_SSL(server,port);
+	mail = imaplib.IMAP4_SSL(server,port);
 	mail.login(user, pw);
 
-    #For Gmail, mail.select can select "inbox" or a label such as "WOL Comp". Can rely on Gmail filters instead of developing custom from scratch.
+	#For Gmail, mail.select can select "inbox" or a label such as "WOL Comp". Can rely on Gmail filters instead of developing custom from scratch.
 	mail.select(subject); 
 	
 	typ, data = mail.search(None, '(UNSEEN)'); #search for unread emails
 	NewEmailFlag=False;	#initializes flag to false
 	
-    for num in data[0].split():
+	for num in data[0].split():
 		typ, data = mail.fetch(num, '(RFC822)') #RFC822 is a parser for email headers; downloading any new email that matches "subject" specified above. 
 		if num > 0: NewEmailFlag=True; #if new email, set flag
 
@@ -63,23 +63,21 @@ def EmailChecker(server,port,user,pw,subject):
 
 def WOL(ADDR,MAC):
 	print MAC;	#debugging only
-    #for the following command to work, "wakeonlan" needs to be installed. for RPi (assuming raspian distro), run command "sudo apt-get install "wakeonlan"
+	#for the following command to work, "wakeonlan" needs to be installed. for RPi (assuming raspian distro), run command "sudo apt-get install "wakeonlan"
 	subprocess.call(['wakeonlan','-i', ADDR,MAC]);
 
 def rmtshutdown(ADDR,MAC,username,pw):
-    print ADDR;
-    print MAC;
-    subprocess.call(['net rpc shutdown','-I',ADDR,'-U',username,pw]);
+	print ADDR;
+	print MAC;
+	subprocess.call(['net rpc shutdown','-I',ADDR,'-U',username,pw]);
     
 gmail_server,imap_port,username,password,Subjects,Comps,MAC,Broadcast=ImportConf('CompWakeUp.conf');
 
 #goes through each "subject" and checks email to see if any new emails. sends WOL packet if so.
 for idx,val in enumerate(Subjects):
-    print('Array Index - ' + str(idx));
-    print('Subject - ' + val);
-    CompFlag=EmailChecker(gmail_server,imap_port,username,password,Subjects[idx]);
-    if CompFlag:
-        print('Waking up - ' + Comps[idx]);
-        WOL(Broadcast[idx],MAC[idx]);
-
-    
+	print('Array Index - ' + str(idx));
+	print('Subject - ' + val);
+	CompFlag=EmailChecker(gmail_server,imap_port,username,password,Subjects[idx]);
+	if CompFlag:
+		print('Waking up - ' + Comps[idx]);
+		WOL(Broadcast[idx],MAC[idx]);
