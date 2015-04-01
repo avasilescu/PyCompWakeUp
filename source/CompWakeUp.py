@@ -70,8 +70,14 @@ def rmtshutdown(ADDR,MAC,username,pw):
 	print ADDR;
 	print MAC;
 	subprocess.call(['net rpc shutdown','-I',ADDR,'-U',username,pw]);
-    
-gmail_server,imap_port,username,password,Subjects,Comps,MAC,Broadcast=ImportConf('CompWakeUp.conf');
+
+__location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)));
+
+#for debugging absolute location
+print __location__;
+print(os.path.join(__location__,'CompWakeUp.conf'))
+
+gmail_server,imap_port,username,password,Subjects,Comps,MAC,Broadcast=ImportConf(os.path.join(__location__,'CompWakeUp.conf'));
 
 #goes through each "subject" and checks email to see if any new emails. sends WOL packet if so.
 for idx,val in enumerate(Subjects):
