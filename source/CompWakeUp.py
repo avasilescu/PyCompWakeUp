@@ -17,6 +17,7 @@ def ImportConf(filename):
 	username=config.get('IMAP Server','username');
 	password=config.get('IMAP Server','password');
 
+	Subjects=config.get('General','Subjects').split('\n');
 	Comps=config.get('General','Computers').split('\n');
 	MAC=config.get('General','MAC').split('\n');
 	Broadcast=config.get('General','Broadcast').split('\n');	
@@ -27,7 +28,7 @@ def ImportConf(filename):
 	print("Comps: ");
 	print(Comps); 
 
-	return(gmail_server,imap_port,username,password,Comps,MAC,Broadcast,comp_user,comp_pw);
+	return(gmail_server,imap_port,username,password, Subjects, Comps,MAC,Broadcast,comp_user,comp_pw);
 '''	
 Theory of operation
 
@@ -100,11 +101,11 @@ def CreateSubjectArray(Computers,wol_subject,shutdown_subject):
 def CreateSubjectArray2(Computers, ImportSubject):
 	ExportSubjects=[];
 
-	for subj in enumerate(ImportSubject):
-		for i, Comp in enumerate(Computers):
-			print("i= " + str(i));
+	for i, subj in enumerate(ImportSubject):
+		for j, Comp in enumerate(Computers):
+			print("j= " + str(j));
 			print("Comp= " + Comp);
-			ExportSubjects.append(subj + Comp);
+			ExportSubjects.append(str(subj) + " " + str(Comp));
 
 	print("ExportSubjects:");
 	print(ExportSubjects);
@@ -121,15 +122,19 @@ __location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file
 print __location__;
 print(os.path.join(__location__,'CompWakeUp.conf'))
 
-gmail_server,imap_port,username,password,Comps,MAC,Broadcast,comp_user,comp_pw=ImportConf(os.path.join(__location__,'CompWakeUp.conf'));
+gmail_server,imap_port,username,password, Subjects, Comps,MAC,Broadcast,comp_user,comp_pw=ImportConf(os.path.join(__location__,'CompWakeUp.conf'));
 
 #Creates subject arrary
 SubjectArray = CreateSubjectArray(Comps, wol_subject, shutdown_subject);
 print("SubjectArray:");
 print(SubjectArray);
 
+SubjectArray2 = CreateSubjectArray2(Comps, Subjects);
+print("SubjectArray2:");
+print(SubjectArray2);
+
 #goes through each "subject" and checks email to see if any new emails. sends WOL packet if so.
-for idx,Subject in enumerate(SubjectArray):
+for idx,Subject in enumerate(SubjectArray2):
 	print('Array Index - ' + str(idx));
 	print('Subject - ' + Subject);
 	CompFlag=EmailChecker(gmail_server,imap_port,username,password,Subject);
